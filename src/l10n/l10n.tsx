@@ -1,5 +1,3 @@
-import { h } from 'preact';
-
 let locale: Locale = null;
 let localeCode: string = null;
 
@@ -43,10 +41,6 @@ export function l10n(strings, ...args: any[]): string {
 
     return l10nArray.join('');
 }
-
-// export function _l10n(strings, ...args: any[]): h.JSX.Element {
-//   return <span dangerouslySetInnerHTML={{ __html: l10n(strings, args) || '' }}></span>
-// }
 
 function getLocalisationValue(key: string, params: any[], delimiter = ','): string {
   const l10n: string | Localisation[] = locale[key];
