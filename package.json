@@ -1,0 +1,25 @@
+{
+  "name": "preact-to-html-draft",
+  "version": "0.0.1",
+  "description": "Preact rendering to static HTML & CSS",
+  "main": "rollup.config.js",
+  "scripts": {
+    "tsc": "tsc --build",
+    "tsc:watch": "tsc --build --watch",
+    "rollup": "rollup --config",
+    "rollup:watch": "rollup --config --watch",
+    "build": "npm run rollup",
+    "watch": "npm run rollup:watch"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "@rollup/plugin-node-resolve": "^15.2.0",
+    "@types/node": "^20.5.1",
+    "preact": "^10.17.1",
+    "preact-render-to-string": "^6.2.1",
+    "rollup": "^3.28.0",
+    "sass": "^1.66.1",
+    "tslib": "^2.6.2",
+    "typescript": "^5.1.6"
+  }
+}
