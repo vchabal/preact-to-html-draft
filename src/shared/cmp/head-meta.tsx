@@ -29,7 +29,7 @@ export class HeadMeta extends Component<HeadMetaProps | null, {}> {
         <meta name="keywords" content={ props.keywords }/>
         <meta name="description" content={ props.description }/>
         <meta name="viewport" content={ props.viewport }/>
-        <title>{ props.title } | Naylah</title>
+        <title>{ props.title }</title>
         <link rel="shortcut icon" href="assets/img/favicon.ico" type="image/x-icon"/>
       </Fragment>
     );

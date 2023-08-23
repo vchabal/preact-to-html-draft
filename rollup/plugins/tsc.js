@@ -35,7 +35,6 @@ module.exports = () => {
     name: 'tsc',
 
     buildStart() {
-      console.info('[inf] [tsc] Building TS');
       execSync('tsc --build', { cwd: process.cwd(), stdio: STDIO });
     },
 

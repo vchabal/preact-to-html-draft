@@ -11,6 +11,18 @@ export function setLocale(code: string, l10n: Locale) {
   locale = l10n;
 }
 
+export function is(value): RegExp {
+  return new RegExp(`^${value}$`);
+}
+
+export function range(min,max): RegExp {
+  const nums = [];
+  for (let i = min; i <= max; i++) {
+    nums.push(i);
+  }
+  return new RegExp(`^${nums.join('$|^')}$`);
+}
+
 export function l10n(strings, ...args: any[]): string {
   const key = strings.join('%s');
   const l10n: string = getLocalisationValue(key, args);
@@ -32,9 +44,9 @@ export function l10n(strings, ...args: any[]): string {
     return l10nArray.join('');
 }
 
-export function _l10n(strings, ...args: any[]): h.JSX.Element {
-  return <span dangerouslySetInnerHTML={{ __html: l10n(strings, args) || '' }}></span>
-}
+// export function _l10n(strings, ...args: any[]): h.JSX.Element {
+//   return <span dangerouslySetInnerHTML={{ __html: l10n(strings, args) || '' }}></span>
+// }
 
 function getLocalisationValue(key: string, params: any[], delimiter = ','): string {
   const l10n: string | Localisation[] = locale[key];
