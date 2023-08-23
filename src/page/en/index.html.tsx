@@ -1,7 +1,7 @@
 import render from 'preact-render-to-string';
 import { h } from 'preact';
 
-import { code, l10n } from '@l10n/sk';
+import { code, l10n } from '@l10n/en';
 import { Demo } from '@modules';
 import { HeadMeta } from '@shared/cmp';
 

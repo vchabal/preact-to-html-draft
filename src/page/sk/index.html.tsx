@@ -9,11 +9,12 @@ export default render(
   <html lang={code}>
     <head>
       <HeadMeta title={ l10n`Hello World` } />
-      <base href="../"/>
-      <link rel="stylesheet" href="home/home.css"/>
     </head>
     <body>
       <Demo />
+      <script src="../js/preact.js"></script>
+      <script src="./index.js"></script>
+      <script>index();</script>
     </body>
   </html>
 );
