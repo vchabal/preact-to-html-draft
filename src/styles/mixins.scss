@@ -1,0 +1,20 @@
+@mixin vertical-align ($height: 100%, $width: null, $align: middle) {
+  content: "";
+  display: inline-block;
+  vertical-align: $align;
+  height: $height;
+  @if ($width) { width: $width; }
+}
+
+@mixin absolute-fill ($top: 0, $left: 0, $bottom: 0, $right: 0) {
+  display: block;
+  position: absolute;
+  left: $left; right: $right;
+  top: $top; bottom: $bottom;
+}
+
+@mixin square {
+  content: "";
+  display: block;
+  padding-top: 100%;
+}

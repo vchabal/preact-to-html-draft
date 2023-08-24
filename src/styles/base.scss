@@ -1,0 +1,50 @@
+@use 'variables';
+@use 'reset';
+@use 'font';
+@use 'mixins';
+
+*, *:before, *:after { box-sizing: border-box; }
+
+html, body {
+  display: block;
+}
+
+html {
+  height: 100%;
+  // background-color: ;
+}
+
+body {
+  min-height: 100%;
+  font-size: 100%;
+  font-family: Arial, sans-serif;
+  // color: ;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-weight: normal;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+a { text-decoration: none; color: inherit; }
+label[for] { cursor: pointer; }
+object, svg { pointer-events: none; }
+iframe { border: 0 }
+ul { margin: 0; }
+.nowrap { white-space: nowrap; }
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.fadein { animation: fadeIn 1s ease-out 1 normal forwards; }
+.fadeout { animation: fadeOut 1s ease-in 1 normal forwards; }

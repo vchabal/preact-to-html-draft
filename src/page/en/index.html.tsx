@@ -5,10 +5,13 @@ import { code, l10n } from '@l10n/en';
 import { Demo } from '@modules';
 import { HeadMeta } from '@shared/cmp';
 
+import './index.scss';
+
 export default render(
   <html lang={code}>
     <head>
       <HeadMeta title={ l10n`Hello World` } />
+      <link rel="stylesheet" href="./index.css"/>
     </head>
     <body>
       <Demo />

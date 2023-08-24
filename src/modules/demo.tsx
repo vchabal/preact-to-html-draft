@@ -4,6 +4,8 @@ import { l10n } from '@src/l10n';
 import { ClickCounter } from '@shared/cmp';
 import { Facebook, Instagram } from '@shared/icon';
 
+import './demo.scss';
+
 export class Demo extends Component {
 
   render (): ComponentChild {

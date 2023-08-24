@@ -10,7 +10,7 @@ module.exports = () => {
       const result = codeFn();
 
       // Read Html template, apply HTML JS CSS
-      return result;
+      return '<!DOCTYPE html>' + result;
     }
   }
 }
