@@ -8,7 +8,6 @@ const {
 } = require('path');
 
 const {
-  existsSync,
   readFileSync
 }  = require('fs');
 
@@ -80,7 +79,6 @@ module.exports = (watch) => {
         const outDir = options.outDir;
         const tsFile = relative(process.cwd(), id);
         const jsFile = join(outDir, tsFile).replace(TSX, '.js');
-        //return readFileSync(jsFile, { encoding: 'utf8' });
         const jsContents = readFileSync(jsFile, { encoding: 'utf8' }).split(/\n+/);
 
         const scssImports = jsContents

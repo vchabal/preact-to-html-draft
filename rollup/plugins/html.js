@@ -3,8 +3,7 @@ module.exports = () => {
     name: 'html',
 
     renderChunk(code, _, options) {
-      console.info('[inf] [html] HTML', options.name);
-
+      //console.info('[inf] [html] HTML', options.name);
       // Prepare HTML
       const codeFn = new Function(code + `return ${options.name};`);
       const result = codeFn();

@@ -5,7 +5,11 @@ export const code = 'sk';
 
 setLocale(code, {
   'Hello World': 'Ahoj svet',
-  'Click here': 'Klikaj tu',
+  'Click below': 'Klikaj dole ↓',
+  '%s click counter': [
+    { value: 'Prve pocitadlo: ', $: is(1) },
+    { value: 'Druhe pocitadlo: ', $: is(2) }
+  ],
   '%s clicks': [
     { value: 'Žiaden klik', $: is(0) },
     { value: '1 klik',      $: is(1) },

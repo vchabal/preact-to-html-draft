@@ -1,6 +1,8 @@
 import { h, Component, Fragment, ComponentChild } from 'preact';
 import { l10n } from '@src/l10n';
 
+import './click-counter.scss';
+
 export interface ClickCounterState {
   clickCount: number;
 }
@@ -20,7 +22,7 @@ export class ClickCounter extends Component<{}, ClickCounterState>{
   render(): ComponentChild {
     return (
       <Fragment>
-        <a onClick={() => this.click()}>{ l10n`${this.clickCount} clicks` }</a>
+        <a class="click-counter" onClick={() => this.click()}>{ l10n`${this.clickCount} clicks` }</a>
       </Fragment>
     )
   }
