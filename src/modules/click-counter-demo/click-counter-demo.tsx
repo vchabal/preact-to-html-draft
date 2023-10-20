@@ -4,15 +4,14 @@ import { l10n } from '@src/l10n';
 import { ClickCounter } from '@shared/cmp';
 import { Facebook, Instagram } from '@shared/icon';
 
-import './demo.scss';
+import './click-counter-demo.scss';
 
-export class Demo extends Component {
-
+export class ClickCounterDemo extends Component {
   render (): ComponentChild {
     return (
       <Fragment>
         <main class="demo">
-          <h1 class="demo__title">{ l10n`Click below` }</h1>
+          <h1 class="demo__title">{ this.props.children }</h1>
           <section>
             <span>{ l10n`${1} click counter` }</span>
             <ClickCounter />
@@ -29,5 +28,4 @@ export class Demo extends Component {
       </Fragment>
     );
   }
-
 }

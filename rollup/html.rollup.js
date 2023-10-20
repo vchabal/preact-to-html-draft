@@ -7,11 +7,16 @@ module.exports = (watch, pages) => {
   const htmlPages = [];
 
   for (const page of pages) {
+    // Replace template component with main one
+    const replace = {};
+    replace[`./${page.template}-component`] = `./src/page/${page.main}.tsx`;
+
+    // Create render config
     htmlPages.push({
-      plugins: [ resolve(), tsc(), discard(/\.scss$/i), html() ],
-      input: `./src/page/${page}.html.tsx`,
+      plugins: [ resolve(), tsc(replace), discard(/\.scss$/i), html() ],
+      input: `./src/template/${page.template}.html.tsx`,
       output: {
-        file: `./html/${page}.html`,
+        file: `./html/${page.main}/index.html`,
         format: 'iife',
         name: 'html',
       },

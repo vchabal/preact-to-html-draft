@@ -7,8 +7,8 @@ mkdirSync('./html', { recursive: true });
 module.exports = function ({ watch }) {
   return config(Boolean(watch), [
     // En pages
-    'en/index',
+    { main: 'en/demo', template: 'page-default' },
     // Sk pages
-    'sk/index',
+    { main: 'sk/demo', template: 'page-default' },
   ]);
 }

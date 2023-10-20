@@ -28,7 +28,7 @@ function getTsConfig() {
   return parseJsonConfigFileContent(config, sys, process.cwd(), void 0, tsconfigJsonPath);
 }
 
-module.exports = () => {
+module.exports = (replace) => {
   const { options } = getTsConfig();
 
   return {
@@ -39,6 +39,10 @@ module.exports = () => {
     },
 
     resolveId(id, importer) {
+      if (replace && id in replace) {
+        //console.log('replacing >>', id, replace[id]);
+        return replace[id];
+      }
       if (!id || !importer) return null;
       const { resolvedModule } = resolveModuleName(id, importer, options, sys);
       if (!resolvedModule || resolvedModule.extension === '.d.ts') return null;
