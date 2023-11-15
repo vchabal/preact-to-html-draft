@@ -5,5 +5,10 @@ const css = require('./css.rollup.js');
 
 module.exports = (watch, pages) => {
   console.info(`[inf] Building preact lib and ${pages.length} pages, watch:${watch}`);
-  return [preactLib(watch), ...toHtml(watch, pages), ...toJs(watch, pages), ...css(watch, pages)];
+  return [
+    preactLib(watch),
+    ...toHtml(watch, pages),
+    ...toJs(watch, pages),
+    ...css(watch, pages)
+  ];
 }
