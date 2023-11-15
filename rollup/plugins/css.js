@@ -9,7 +9,7 @@ const {
 
 const {
   readFileSync
-}  = require('fs');
+} = require('fs');
 
 const {
   sys,
@@ -24,7 +24,8 @@ const TSX = /\.tsx?$/i;
 const SCSS_IMPORT = /^\s*import.+\.scss';?$/
 const SCSS_IMPORT_PATH = /.*import\s['"`](.+)['"`].*/;
 const SCSS_USE = /^\s*@use/;
-const SCSS_USE_PATH = /^\s*@use\s+['"](.+)['"];/;
+const SCSS_USE_LIB = /sass:.+/;
+const SCSS_USE_PATH = /^\s*@use\s+['"](.+)['"].*;/;
 
 function getTsConfig() {
   const tsconfigJsonPath = join(process.cwd(), './tsconfig.json')
@@ -101,6 +102,8 @@ module.exports = (watch) => {
           .split(/\n+/)
           .filter(line => SCSS_USE.test(line))
           .map(line => line.replace(SCSS_USE_PATH, '$1'))
+          .map(line => line.startsWith('~') ? line.substring(1) : line)
+          .filter(path => !SCSS_USE_LIB.test(path))
           .map(path => `import '${path}.scss';`)
           .join('\n');
       }
@@ -113,19 +116,32 @@ module.exports = (watch) => {
       for (const id of data.order) {
         // On Windows it's required to replace backslash
         const scssFile = relative(process.cwd(), id).replace(/\\/g, '/');
-        stylesArray.push(`@use "./${scssFile}";`);
+        stylesArray.push(`@use '${scssFile}';`);
       }
 
-      const scsslogFriendly = data.order
-        .map(i => relative(process.cwd(), i))
-        .map(i => i.replace(/\\/g, '/'));
-      console.info('[inf] [scss] scss dependecy', scsslogFriendly);
 
+      const cwd = process.cwd().replace(/\\/g, '/');
       const cssResult = compileString(stylesArray.join('\n'), {
         style: 'compressed',
-        loadPaths: [ process.cwd().replace(/\\/g, '/') ],
+        loadPaths: [ cwd ],
         sourceMapIncludeSources: watch,
-        sourceMap: watch
+        sourceMap: watch,
+        importers: [{
+          findFileUrl: (path) => {
+            path = path.startsWith('~src/') ? path.substring(1) :
+                   path.startsWith('src/') ? path :
+                   null;
+
+            if (!path) {
+              console.info('[inf] [scss] no url for', path);
+              return null;
+            }
+
+            //console.info('[inf] [scss] URL:', cwd, path);
+            const url = new URL('file://' + cwd + '/' + path + '.scss');
+            return url;
+          }
+        }]
       });
 
       data.output = cssResult;

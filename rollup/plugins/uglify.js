@@ -1,4 +1,4 @@
-const { minify }= require('uglify-js');
+const { minify } = require('uglify-js');
 
 module.exports = () => {
   return {
