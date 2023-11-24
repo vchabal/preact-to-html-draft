@@ -3,9 +3,12 @@ module.exports = () => {
     name: 'html',
 
     renderChunk(code, _, options) {
-      //console.info('[inf] [html] HTML', options.name);
+      const scope = 'var window = {' +
+        'addEventListener: ()=>{}' +
+      '};';
+
       // Prepare HTML
-      const codeFn = new Function(code + `return ${options.name};`);
+      const codeFn = new Function(scope + code + `return ${options.name};`);
       const result = codeFn();
 
       // Read Html template, apply HTML JS CSS

@@ -1,6 +1,6 @@
-const {
-  compileString
-} = require('sass');
+const { compileString } = require('sass');
+var postcss = require('postcss');
+const autoprefixer = require('autoprefixer');
 
 const {
   join,
@@ -119,9 +119,9 @@ module.exports = (watch) => {
         stylesArray.push(`@use '${scssFile}';`);
       }
 
-
       const cwd = process.cwd().replace(/\\/g, '/');
       const cssResult = compileString(stylesArray.join('\n'), {
+        verbose: watch,
         style: 'compressed',
         loadPaths: [ cwd ],
         sourceMapIncludeSources: watch,
@@ -156,9 +156,12 @@ module.exports = (watch) => {
         const sm = JSON.stringify(compileResulst.sourceMap);
         const smBase64 = (Buffer.from(sm, 'utf8') || '').toString('base64');
         smComment = '\n\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,' + smBase64 + ' */';
+        return compileResulst.css + smComment;
       }
 
-      return compileResulst.css + smComment;
+      return postcss([ autoprefixer({ remove: false, add: true }) ])
+        .process(compileResulst.css)
+        .css;
     }
   };
 }
