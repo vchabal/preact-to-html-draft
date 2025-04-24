@@ -10,8 +10,13 @@ html, body {
 }
 
 html {
-  height: 100%;
-  // background-color: ;
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+:root, html {
+  // 1rem sized to 10px
+  font-size: 62.5%;
 }
 
 body {
@@ -30,12 +35,14 @@ h1, h2, h3, h4 {
   font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
+svg { display: block; }
 a { text-decoration: none; color: inherit; }
 label[for] { cursor: pointer; }
 object, svg { pointer-events: none; }
 iframe { border: 0 }
 ul { margin: 0; }
 .nowrap { white-space: nowrap; }
+.hide { display: none; }
 
 @keyframes fadeIn {
   0% { opacity: 0; }

@@ -1,3 +1,5 @@
+@use 'sass:math' as math;
+
 @mixin vertical-align ($height: 100%, $width: null, $align: middle) {
   content: "";
   display: inline-block;
@@ -17,4 +19,8 @@
   content: "";
   display: block;
   padding-top: 100%;
+}
+
+@function strip-unit($number) {
+  @return math.div($number, $number * 0 + 1);
 }

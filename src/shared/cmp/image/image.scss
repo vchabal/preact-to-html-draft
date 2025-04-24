@@ -1,0 +1,6 @@
+.pic {
+  display: block;
+  &__img {
+    object-fit: cover;
+  }
+}

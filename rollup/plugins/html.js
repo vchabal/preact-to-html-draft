@@ -3,8 +3,17 @@ module.exports = () => {
     name: 'html',
 
     renderChunk(code, _, options) {
-      const scope = 'var window = {' +
-        'addEventListener: ()=>{}' +
+      const scope = '' +
+      'var console = { log: ()=>{}, error: (e)=>{throw new Error(e)} };' +
+      'var window = {' +
+        'prerender: true,' +
+        'requestAnimationFrame: ()=>{},' +
+        'addEventListener: ()=>{},' +
+        'setTimeout: ()=>{},' +
+        'setInterval: ()=>{},' +
+        'console: console,' +
+        'document: { body: { clientWidth: 960 } },' +
+        'localStorage: { getItem: ()=>null },' +
       '};';
 
       // Prepare HTML

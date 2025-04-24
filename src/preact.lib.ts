@@ -1,13 +1,14 @@
-import {
+export {
+  h,
   Component,
   Fragment,
-  h,
-  render
+  render,
+  options,
+  createRef,
+  toChildArray
 } from 'preact';
 
-import {
-  useState
+export {
+  useEffect,
+  useState,
 } from 'preact/hooks';
-
-export const preact = { Component, Fragment, h, render };
-export const hooks = { useState };

@@ -9,6 +9,10 @@ export function setLocale(code: string, l10n: Locale) {
   locale = l10n;
 }
 
+export function isLocale(code: string) {
+  return localeCode === code;
+}
+
 export function is(value): RegExp {
   return new RegExp(`^${value}$`);
 }

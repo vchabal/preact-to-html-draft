@@ -12,7 +12,7 @@ const watchConfig = {
 
 module.exports = (watch) => {
   return {
-    plugins: [ resolve(), tsc(), uglify(), watch && serve(watchConfig), copy([{ from: 'src/assets', to: 'html/assets' }]) ],
+    plugins: [ resolve(), tsc(), watch && serve(watchConfig), copy([{ from: 'src/assets', to: 'html/assets' }]) ],
     input: './src/preact.lib.ts',
     output: [{
       file: './html/js/preact.js',

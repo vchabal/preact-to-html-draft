@@ -21,8 +21,8 @@ module.exports = (watch, pages) => {
         format: 'iife',
         name: 'startup', //page.replace.replace(/.+\/(.+)/, '$1'),
         globals: {
-          'preact': 'preactLib.preact',
-          'preact/hooks': 'preactLib.hooks'
+          'preact': 'preactLib',
+          'preact/hooks': 'preactLib'
         }
       },
     })

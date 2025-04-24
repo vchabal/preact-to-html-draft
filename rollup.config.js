@@ -7,8 +7,10 @@ mkdirSync('./html', { recursive: true });
 module.exports = function ({ watch }) {
   return config(Boolean(watch), [
     // En pages
-    { main: 'en/demo', template: 'page-default' },
+    { main: 'en/demo', template: 'page-default', sitemapPriority: 1 },
     // Sk pages
-    { main: 'sk/demo', template: 'page-default' },
-  ]);
+    { main: 'sk/demo', template: 'page-default', sitemapPriority: 1 },
+  ], {
+    domain: 'https://sitemap.domain.com/'
+  });
 }

@@ -1,3 +1,4 @@
+const webpConverter = require('webp-converter');
 const {
   statSync,
   mkdirSync,
@@ -15,6 +16,8 @@ function errHandler(err) {
     throw err;
 }
 
+const convertToWebp = [ '.png', 'jpg' ];
+
 function copyRecursiveSync(src, dest) {
   const isDir = existsSync(src) && statSync(src).isDirectory();
 
@@ -30,6 +33,10 @@ function copyRecursiveSync(src, dest) {
   } else {
     mkdirSync(join(dest, '..'), { recursive: true,  }, errHandler);
     copyFileSync(src, dest);
+
+    if (convertToWebp.find(type => src.endsWith(type))) {
+      webpConverter.cwebp(src, dest + '.webp', '-q 80');
+    }
   }
 };
 
