@@ -1,6 +1,6 @@
 const { compileString } = require('sass');
-var postcss = require('postcss');
 const autoprefixer = require('autoprefixer');
+const postcss = require('postcss');
 
 const {
   join,
@@ -8,7 +8,8 @@ const {
 } = require('path');
 
 const {
-  readFileSync
+  readFileSync,
+  existsSync
 } = require('fs');
 
 const {
@@ -23,9 +24,13 @@ const TSX = /\.tsx?$/i;
 
 const SCSS_IMPORT = /^\s*import.+\.scss';?$/
 const SCSS_IMPORT_PATH = /.*import\s['"`](.+)['"`].*/;
+
 const SCSS_USE = /^\s*@use/;
 const SCSS_USE_LIB = /sass:.+/;
 const SCSS_USE_PATH = /^\s*@use\s+['"](.+)['"].*;/;
+
+const SCSS_RENDER_IMPORT = /____rollupCssImport\('.+'\)/;
+const SCSS_RENDER_PATH = /.*____rollupCssImport\('(.+)'\).*/;
 
 function getTsConfig() {
   const tsconfigJsonPath = join(process.cwd(), './tsconfig.json')
@@ -34,9 +39,18 @@ function getTsConfig() {
   return parseJsonConfigFileContent(config, sys, process.cwd(), void 0, tsconfigJsonPath);
 }
 
+function renderScssImport(line, id) {
+  if (!SCSS_IMPORT.test(line))
+    return line;
+
+  const scssPath = line.replace(SCSS_IMPORT_PATH, '$1');
+  const scssImport = join(id, '..', scssPath);
+  return `____rollupCssImport('${scssImport}');\n${line}`;
+}
+
 module.exports = (watch) => {
   const { options } = getTsConfig();
-  const data = { styles: null, order: null, output: null };
+  const data = { styles: null, order: null };
 
   return {
     name: 'css',
@@ -44,7 +58,6 @@ module.exports = (watch) => {
     buildStart(opts) {
       data.styles = {};
       data.order = [];
-      data.output = null;
     },
 
     /**
@@ -55,13 +68,17 @@ module.exports = (watch) => {
      * @returns Resolved import file path, /home/project/src/modules/demo.tsx
      */
     resolveId(id, importer) {
-      if (!id || !importer) return null;
+      if (!id || !importer)
+        return null;
       if (TSX.test(importer)) {
         const { resolvedModule } = resolveModuleName(id, importer, options, sys);
         if (!resolvedModule || resolvedModule.extension === '.d.ts') return null;
+        // console.info('[inf] [css] RSL tsx:', id, importer);
         return resolvedModule.resolvedFileName;
       }
+
       if (SCSS.test(importer)) {
+        // console.info('[inf] [css] RSL css:', id, importer);
         return id.startsWith('src/') ?
           join(process.cwd(), id).replace(/\\/g, '/'):
           join(importer, '..', id).replace(/\\/g, '/');
@@ -75,7 +92,7 @@ module.exports = (watch) => {
      * @returns File contents
      */
     load(id) {
-      // Resolve typescript file and return just imports
+      // Resolve typescript file
       if (TSX.test(id)) {
         const outDir = options.outDir;
         const tsFile = relative(process.cwd(), id);
@@ -93,7 +110,9 @@ module.exports = (watch) => {
           data.order.push(scssImport);
         }
 
-        return jsContents.join('\n');
+        return jsContents
+          .map(line => renderScssImport(line, id))
+          .join('\n');
       }
 
       // Resolve scss file
@@ -104,23 +123,25 @@ module.exports = (watch) => {
           .map(line => line.replace(SCSS_USE_PATH, '$1'))
           .map(line => line.startsWith('~') ? line.substring(1) : line)
           .filter(path => !SCSS_USE_LIB.test(path))
-          .map(path => `import '${path}.scss';`)
+          .map(path => `import '${path}.scss';\n____rollupCssFile('${id}')`)
           .join('\n');
       }
 
       return null;
     },
 
-    buildEnd() {
-      const stylesArray = [];
-      for (const id of data.order) {
-        // On Windows it's required to replace backslash
-        const scssFile = relative(process.cwd(), id).replace(/\\/g, '/');
-        stylesArray.push(`@use '${scssFile}';`);
-      }
+    renderChunk(code) {
+      const scssFileWithImports = code.split(/\n/)
+        .filter(line => SCSS_RENDER_IMPORT.test(line))
+        .map(line => line.replace(SCSS_RENDER_PATH, '$1'))
+        .filter((line, index, array) => array.indexOf(line) === index)
+        .sort((a, b) => data.order.indexOf(a) - data.order.indexOf(b))
+        .map(scssFilePath => `@use '${scssFilePath.replace(/\\/g, '/')}';`);
 
-      const cwd = process.cwd().replace(/\\/g, '/');
-      const cssResult = compileString(stylesArray.join('\n'), {
+      //console.info('[inf] [css] scss files', scssFileWithImports);
+
+      const cwd = process.cwd();
+      const compileResult = compileString(scssFileWithImports.join('\n'), {
         verbose: watch,
         style: 'compressed',
         loadPaths: [ cwd ],
@@ -128,39 +149,35 @@ module.exports = (watch) => {
         sourceMap: watch,
         importers: [{
           findFileUrl: (path) => {
-            path = path.startsWith('~src/') ? path.substring(1) :
-                   path.startsWith('src/') ? path :
-                   null;
+            path = SCSS.test(path) ? path
+                 : path + '.scss';
+            path = path.startsWith('~src/') ? join(cwd, path.substring(1))
+                 : path.startsWith('src/') ? join(cwd , path)
+                 : existsSync(path) ? path
+                 : null;
 
             if (!path) {
-              console.info('[inf] [scss] no url for', path);
+              console.info('[inf] [css] no url for', path);
               return null;
             }
 
-            //console.info('[inf] [scss] URL:', cwd, path);
-            const url = new URL('file://' + cwd + '/' + path + '.scss');
-            return url;
+            //console.info('[inf] [css] URL:', cwd, path);
+            return new URL('file://' + path);
           }
         }]
       });
 
-      data.output = cssResult;
-    },
-
-    renderChunk() {
-      const compileResulst = data.output;
       let smComment = '';
-
-      if (compileResulst.sourceMap) {
+      if (compileResult.sourceMap) {
         // https://github.com/sass/dart-sass/issues/1594#issuecomment-1013208452
-        const sm = JSON.stringify(compileResulst.sourceMap);
+        const sm = JSON.stringify(compileResult.sourceMap);
         const smBase64 = (Buffer.from(sm, 'utf8') || '').toString('base64');
         smComment = '\n\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,' + smBase64 + ' */';
-        return compileResulst.css + smComment;
+        return compileResult.css + smComment;
       }
 
       return postcss([ autoprefixer({ remove: false, add: true }) ])
-        .process(compileResulst.css)
+        .process(compileResult.css)
         .css;
     }
   };

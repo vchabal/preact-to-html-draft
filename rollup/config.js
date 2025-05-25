@@ -8,7 +8,7 @@ const generateSitemap = require('./sitemap.generate.js');
 module.exports = (watch, pages, siteSettings) => {
   console.info(`[inf] Building preact lib and ${pages.length} pages, watch:${watch}`);
 
-  const sitemapUrls = pages.map(page => `${siteSettings.domain}${page.main}/`);
+  const sitemapUrls = pages.map(page => `${siteSettings.domain}${page.path}`);
   const sitemapPriorities = pages.map(page => page.sitemapPriority);
   fs.writeFileSync('./html/sitemap.xml', generateSitemap(sitemapUrls, sitemapPriorities), { encoding: 'utf-8' });
 

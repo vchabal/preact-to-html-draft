@@ -7,9 +7,9 @@ module.exports = (watch, pages) => {
   const jsFiles = [];
 
   for (const page of pages) {
-    // Replace template component with main one
+    // Replace template component with defined path
     const replace = {};
-    replace[`./${page.template}-component`] = `./src/page/${page.main}.tsx`;
+    replace[`./${page.template}-component`] = `./src/page/${page.path}/index.tsx`;
 
     // Create render config
     jsFiles.push({
@@ -17,7 +17,7 @@ module.exports = (watch, pages) => {
       plugins: [ resolve(), tsc(replace), discard(/\.scss$/i), !watch && uglify() ],
       input: `./src/template/${page.template}.js.tsx`,
       output: {
-        file: `./html/${page.main}/script.js`,
+        file: `./html/${page.path}/script.js`,
         format: 'iife',
         name: 'startup', //page.replace.replace(/.+\/(.+)/, '$1'),
         globals: {

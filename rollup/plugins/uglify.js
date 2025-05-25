@@ -5,6 +5,7 @@ module.exports = () => {
     name: 'uglify',
 
     renderChunk(code) {
+      // console.info('[inf] [uglify] RND:', code.length);
       const result = minify(code);
 
       if (result.error)

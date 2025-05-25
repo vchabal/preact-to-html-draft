@@ -40,7 +40,7 @@ module.exports = (replace) => {
 
     resolveId(id, importer) {
       if (replace && id in replace) {
-        //console.log('replacing >>', id, replace[id]);
+        //console.info('[inf] [tsc] replacing >>', id, replace[id]);
         return replace[id];
       }
       if (!id || !importer) return null;

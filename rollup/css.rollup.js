@@ -7,9 +7,9 @@ module.exports = (watch, pages) => {
   for (const page of pages) {
     cssFiles.push({
       plugins: [ resolve(), css(watch) ],
-      input: `./src/page/${page.main}.tsx`,
+      input: `./src/page/${page.path}/index.tsx`,
       output: {
-        file: `./html/${page.main}/styles.css`
+        file: `./html/${page.path}/styles.css`
       },
     });
   }
