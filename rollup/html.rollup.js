@@ -2,6 +2,7 @@ const resolve = require('@rollup/plugin-node-resolve');
 const discard = require('./plugins/discard.js');
 const html = require('./plugins/html.js');
 const tsc = require('./plugins/tsc.js');
+const watchTarget = require('./plugins/watchTarget.js');
 
 module.exports = (watch, pages) => {
   const htmlPages = [];
@@ -13,7 +14,7 @@ module.exports = (watch, pages) => {
 
     // Create render config
     htmlPages.push({
-      plugins: [ resolve(), tsc(replace), discard(/\.scss$/i), html() ],
+      plugins: [ resolve(), tsc(replace), discard(/\.scss$/i), html(), watch && watchTarget('./src') ],
       input: `./src/template/${page.template}.html.tsx`,
       output: {
         file: `./html/${page.path}/index.html`,

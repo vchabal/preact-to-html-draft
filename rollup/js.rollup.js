@@ -2,6 +2,7 @@ const resolve = require('@rollup/plugin-node-resolve');
 const discard = require('./plugins/discard.js');
 const uglify = require('./plugins/uglify.js');
 const tsc = require('./plugins/tsc.js');
+const watchTarget = require('./plugins/watchTarget.js');
 
 module.exports = (watch, pages) => {
   const jsFiles = [];
@@ -14,7 +15,7 @@ module.exports = (watch, pages) => {
     // Create render config
     jsFiles.push({
       external: [ 'preact', 'preact/hooks' ],
-      plugins: [ resolve(), tsc(replace), discard(/\.scss$/i), !watch && uglify() ],
+      plugins: [ resolve(), tsc(replace), discard(/\.scss$/i), !watch && uglify(), watch && watchTarget('./src') ],
       input: `./src/template/${page.template}.js.tsx`,
       output: {
         file: `./html/${page.path}/script.js`,

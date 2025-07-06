@@ -16,7 +16,7 @@ function errHandler(err) {
     throw err;
 }
 
-const convertToWebp = [ '.png', 'jpg' ];
+const convertToWebp = [ '.png', '.jpg' ];
 
 function copyRecursiveSync(src, dest) {
   const isDir = existsSync(src) && statSync(src).isDirectory();

@@ -12,7 +12,7 @@ export const description = 'A one sentence description about the website in gene
 export const lang = code;
 export const head =
 <Fragment>
-  <title>Hey there</title>
+  <title>Hey there!</title>
 </Fragment>;
 export const body =
 <Fragment>
