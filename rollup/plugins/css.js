@@ -134,7 +134,8 @@ module.exports = (watch) => {
       const scssFileWithImports = code.split(/\n/)
         .filter(line => SCSS_RENDER_IMPORT.test(line))
         .map(line => line.replace(SCSS_RENDER_PATH, '$1'))
-        .filter((line, index, array) => array.indexOf(line) === index)
+        .map(line => line.replace(/\\+/g, '/'))
+        .filter((line, index, array) => array.indexOf(line, index + 1) < 0)
         .sort((a, b) => data.order.indexOf(a) - data.order.indexOf(b))
         .map(scssFilePath => `@use '${scssFilePath.replace(/\\/g, '/')}';`);
 
